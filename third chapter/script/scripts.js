@@ -7,17 +7,36 @@ let data = [['The Lord of the Rings', 'J.R.R. Tolkien', 'English', '1954-1955', 
             ['The Hobbit', 'J.R.R. Tolkien', 'English', '1937', '100 million' ],
             ['She : A History of Adventure', 'H. Rider Huggard', 'English' , '1887', '100 million']
         ];
+
 let Excel = React.createClass({
+    displayName: 'Excel',
+    propTypes:{
+        headers: React.PropTypes.arrayOf(
+            React.PropTypes.string
+        ),
+        initialData:React.PropTypes.arrayOf(
+            React.PropTypes.arrayOf(
+                React.PropTypes.string
+            )
+        )
+    },
+    getInitialState: function(){ return {data: this.props.initialData};
+    },
     render: function(){
         return(
             React.DOM.table(null,
-                React.DOM.thead(null,
+                React.DOM.thead({onClick: this._sort},
                     React.DOM.tr(null,
-                        this.props.headers.map(function(title){
-                            return React.DOM.th(null,title);
-                        })
+                        this.props.headers.map((title , index)=>React.DOM.th({key: index},title)
+                        )
                     )
-                )
+                ),
+                React.DOM.tbody(null,this.state.data.map((row,index)=>{
+                    return(
+                        React.DOM.tr({key: index},
+                        row.map((cell,index)=>React.DOM.td({key: index},cell)))
+                    )
+                }))
             )
         );
     }
